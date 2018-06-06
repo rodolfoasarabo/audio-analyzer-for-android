@@ -114,4 +114,12 @@
     <string name="preference_spectrogramLogPlotMethod_1">Replot spectrogram only while zooming (Saves battery)</string>
     <string name="preference_spectrogramLogPlotMethod_2">Log plot: Replot on zoom</string>
 
+    <!-- afinador -->
+    <string name="cordaUm">1ª e</string>
+    <string name="cordaDois">2ª B</string>
+    <string name="cordaTres">3ª G</string>
+    <string name="cordaQuatro">4ª D</string>
+    <string name="cordaCinco">5ª A</string>
+    <string name="cordaSeis">6ª E</string>
+
 </resources>

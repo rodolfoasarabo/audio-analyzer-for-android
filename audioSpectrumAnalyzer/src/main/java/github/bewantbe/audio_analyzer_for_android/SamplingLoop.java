@@ -41,7 +41,7 @@ import java.util.Arrays;
 class SamplingLoop extends Thread {
     private final String TAG = "SamplingLoop";
     private volatile boolean isRunning = true;
-    private volatile boolean isPaused1 = false;
+//    private volatile boolean isPaused1 = false;
     private STFT stft;   // use with care
     private final AnalyzerParameters analyzerParam;
 
@@ -49,16 +49,16 @@ class SamplingLoop extends Thread {
     private SineGenerator sineGen2;
     private double[] spectrumDBcopy;   // XXX, transfers data from SamplingLoop to AnalyzerGraphic
 
-    private final AnalyzerActivity activity;
+    private final GaugeActivity activity;
 
     volatile double wavSecRemain;
     volatile double wavSec = 0;
 
-    SamplingLoop(AnalyzerActivity _activity, AnalyzerParameters _analyzerParam) {
+    SamplingLoop(GaugeActivity _activity, AnalyzerParameters _analyzerParam) {
         activity = _activity;
         analyzerParam = _analyzerParam;
 
-        isPaused1 = ((SelectorText) activity.findViewById(R.id.run)).getValue().equals("stop");
+//        isPaused1 = ((SelectorText) activity.findViewById(R.id.run)).getValue().equals("stop");
         // Signal sources for testing
         double fq0 = Double.parseDouble(activity.getString(R.string.test_signal_1_freq1));
         double amp0 = Math.pow(10, 1/20.0 * Double.parseDouble(activity.getString(R.string.test_signal_1_db1)));
@@ -138,11 +138,11 @@ class SamplingLoop extends Thread {
         AudioRecord record;
 
         long tStart = SystemClock.uptimeMillis();
-        try {
-            activity.graphInit.join();  // TODO: Seems not working as intended....
-        } catch (InterruptedException e) {
-            Log.w(TAG, "run(): activity.graphInit.join() failed.");
-        }
+//        try {
+//            activity.graphInit.join();  // TODO: Seems not working as intended....
+//        } catch (InterruptedException e) {
+//            Log.w(TAG, "run(): activity.graphInit.join() failed.");
+//        }
         long tEnd = SystemClock.uptimeMillis();
         if (tEnd - tStart < 500) {
             Log.i(TAG, "wait more.." + (500 - (tEnd - tStart)) + " ms");
@@ -182,7 +182,7 @@ class SamplingLoop extends Thread {
             }
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "Fail to initialize recorder.");
-            activity.analyzerViews.notifyToast("Illegal recorder argument. (change source)");
+//            activity.analyzerViews.notifyToast("Illegal recorder argument. (change source)");
             return;
         }
 
@@ -210,12 +210,12 @@ class SamplingLoop extends Thread {
                 String.format("  nFFTAverage     : %d\n", analyzerParam.nFFTAverage));
         analyzerParam.sampleRate = record.getSampleRate();
 
-        if (record.getState() == AudioRecord.STATE_UNINITIALIZED) {
-            Log.e(TAG, "SamplingLoop::run(): Fail to initialize AudioRecord()");
-            activity.analyzerViews.notifyToast("Fail to initialize recorder.");
-            // If failed somehow, leave user a chance to change preference.
-            return;
-        }
+//        if (record.getState() == AudioRecord.STATE_UNINITIALIZED) {
+//            Log.e(TAG, "SamplingLoop::run(): Fail to initialize AudioRecord()");
+//            activity.analyzerViews.notifyToast("Fail to initialize recorder.");
+//            // If failed somehow, leave user a chance to change preference.
+//            return;
+//        }
 
         short[] audioSamples = new short[readChunkSize];
         int numOfReadShort;
@@ -232,20 +232,20 @@ class SamplingLoop extends Thread {
 //      FPSCounter fpsCounter = new FPSCounter("SamplingLoop::run()");
 
         WavWriter wavWriter = new WavWriter(analyzerParam.sampleRate);
-        boolean bSaveWavLoop = activity.bSaveWav;  // change of bSaveWav during loop will only affect next enter.
-        if (bSaveWavLoop) {
-            wavWriter.start();
-            wavSecRemain = wavWriter.secondsLeft();
-            wavSec = 0;
-            Log.i(TAG, "PCM write to file " + wavWriter.getPath());
-        }
+//        boolean bSaveWavLoop = activity.bSaveWav;  // change of bSaveWav during loop will only affect next enter.
+//        if (bSaveWavLoop) {
+//            wavWriter.start();
+//            wavSecRemain = wavWriter.secondsLeft();
+//            wavSec = 0;
+//            Log.i(TAG, "PCM write to file " + wavWriter.getPath());
+//        }
 
         // Start recording
         try {
             record.startRecording();
         } catch (IllegalStateException e) {
             Log.e(TAG, "Fail to start recording.");
-            activity.analyzerViews.notifyToast("Fail to start recording.");
+//            activity.analyzerViews.notifyToast("Fail to start recording.");
             return;
         }
 
@@ -261,21 +261,22 @@ class SamplingLoop extends Thread {
                 numOfReadShort = record.read(audioSamples, 0, readChunkSize);   // pulling
             }
             if ( recorderMonitor.updateState(numOfReadShort) ) {  // performed a check
-                if (recorderMonitor.getLastCheckOverrun())
-                    activity.analyzerViews.notifyOverrun();
-                if (bSaveWavLoop)
-                    wavSecRemain = wavWriter.secondsLeft();
+//                if (recorderMonitor.getLastCheckOverrun())
+//                    activity.analyzerViews.notifyOverrun();
+//                if (bSaveWavLoop)
+//                    wavSecRemain = wavWriter.secondsLeft();
             }
-            if (bSaveWavLoop) {
-                wavWriter.pushAudioShort(audioSamples, numOfReadShort);  // Maybe move this to another thread?
-                wavSec = wavWriter.secondsWritten();
-                activity.analyzerViews.updateRec(wavSec);
-            }
-            if (isPaused1) {
-//          fpsCounter.inc();
-                // keep reading data, for overrun checker and for write wav data
-                continue;
-            }
+//            if (bSaveWavLoop) {
+//                wavWriter.pushAudioShort(audioSamples, numOfReadShort);  // Maybe move this to another thread?
+//                wavSec = wavWriter.secondsWritten();
+//                activity.analyzerViews.updateRec(wavSec);
+//            }
+            activity.updateRec();
+//            if (isPaused1) {
+////          fpsCounter.inc();
+//                // keep reading data, for overrun checker and for write wav data
+//                continue;
+//            }
 
             stft.feedData(audioSamples, numOfReadShort);
 
@@ -284,7 +285,7 @@ class SamplingLoop extends Thread {
                 // Update spectrum or spectrogram
                 final double[] spectrumDB = stft.getSpectrumAmpDB();
                 System.arraycopy(spectrumDB, 0, spectrumDBcopy, 0, spectrumDB.length);
-                activity.analyzerViews.update(spectrumDBcopy);
+//                activity.analyzerViews.update(spectrumDBcopy);
 //          fpsCounter.inc();
 
                 stft.calculatePeak();
@@ -292,19 +293,19 @@ class SamplingLoop extends Thread {
                 activity.maxAmpDB = stft.maxAmpDB;
 
                 // get RMS
-                activity.dtRMS = stft.getRMS();
-                activity.dtRMSFromFT = stft.getRMSFromFT();
+//                activity.dtRMS = stft.getRMS();
+//                activity.dtRMSFromFT = stft.getRMSFromFT();
             }
         }
         Log.i(TAG, "SamplingLoop::Run(): Actual sample rate: " + recorderMonitor.getSampleRate());
         Log.i(TAG, "SamplingLoop::Run(): Stopping and releasing recorder.");
         record.stop();
         record.release();
-        if (bSaveWavLoop) {
-            Log.i(TAG, "SamplingLoop::Run(): Ending saved wav.");
-            wavWriter.stop();
-            activity.analyzerViews.notifyWAVSaved(wavWriter.relativeDir);
-        }
+//        if (bSaveWavLoop) {
+//            Log.i(TAG, "SamplingLoop::Run(): Ending saved wav.");
+//            wavWriter.stop();
+//            activity.analyzerViews.notifyWAVSaved(wavWriter.relativeDir);
+//        }
     }
 
     void setAWeighting(boolean isAWeighting) {
@@ -313,13 +314,13 @@ class SamplingLoop extends Thread {
         }
     }
 
-    void setPause(boolean pause) {
-        this.isPaused1 = pause;
-    }
-
-    boolean getPause() {
-        return this.isPaused1;
-    }
+//    void setPause(boolean pause) {
+//        this.isPaused1 = pause;
+//    }
+//
+//    boolean getPause() {
+//        return this.isPaused1;
+//    }
 
     void finish() {
         isRunning = false;

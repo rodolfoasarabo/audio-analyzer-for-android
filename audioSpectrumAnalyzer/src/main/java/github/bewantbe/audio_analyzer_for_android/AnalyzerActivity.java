@@ -70,6 +70,7 @@ public class AnalyzerActivity extends Activity
     SamplingLoop samplingThread = null;
     private RangeViewDialogC rangeViewDialogC;
     private GestureDetectorCompat mDetector;
+    private Button btnAfinador;
 
     private AnalyzerParameters analyzerParam = null;
 
@@ -102,6 +103,8 @@ public class AnalyzerActivity extends Activity
         // Read preferences and set corresponding variables
         loadPreferenceForView();
 
+        btnAfinador = findViewById(R.id.btnAfinador);
+
         analyzerViews = new AnalyzerViews(this);
 
         // travel Views, and attach ClickListener to the views that contain android:tag="select"
@@ -117,6 +120,14 @@ public class AnalyzerActivity extends Activity
         rangeViewDialogC = new RangeViewDialogC(this, analyzerViews.graphView);
 
         mDetector = new GestureDetectorCompat(this, new AnalyzerGestureListener());
+
+        btnAfinador.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(AnalyzerActivity.this, GaugeActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     /**
@@ -731,7 +742,7 @@ public class AnalyzerActivity extends Activity
             return;
 
         // Start sampling
-        samplingThread = new SamplingLoop(this, _analyzerParam);
+//        samplingThread = new SamplingLoop(this, _analyzerParam);
         samplingThread.start();
     }
 
@@ -861,9 +872,9 @@ public class AnalyzerActivity extends Activity
                 return true;
             case R.id.run:
                 boolean pause = value.equals("stop");
-                if (samplingThread != null && samplingThread.getPause() != pause) {
-                    samplingThread.setPause(pause);
-                }
+//                if (samplingThread != null && samplingThread.getPause() != pause) {
+//                    samplingThread.setPause(pause);
+//                }
                 analyzerViews.graphView.spectrogramPlot.setPause(pause);
                 return false;
                 //case R.id.graph_view_mode:

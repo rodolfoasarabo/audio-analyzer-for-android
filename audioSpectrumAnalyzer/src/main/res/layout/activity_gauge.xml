@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:gauge="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:orientation="vertical">
+
+    <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
+        android:id="@+id/circularProgress"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:dotColor="@color/colorAccent"
+        app:dotWidth="16dp"
+        app:drawDot="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:textSize="0dp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:background="@android:color/background_light"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/circularProgress"
+        app:layout_constraintEnd_toEndOf="@id/circularProgress"
+        app:layout_constraintStart_toStartOf="@+id/circularProgress"
+        app:layout_constraintTop_toTopOf="@id/circularProgress"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/txtValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintEnd_toEndOf="@id/view"
+        app:layout_constraintStart_toStartOf="@id/view" />
+
+    <TextView
+        android:id="@+id/txtValueDb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="-15dB"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <ToggleButton
+        android:id="@+id/btnCorda1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textOff="@string/cordaUm"
+        android:textOn="@string/cordaUm"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnCorda2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ToggleButton
+        android:id="@+id/btnCorda2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOff="@string/cordaDois"
+        android:textOn="@string/cordaDois"
+        app:layout_constraintEnd_toStartOf="@+id/btnCorda3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCorda1"
+        app:layout_constraintTop_toTopOf="@+id/btnCorda1" />
+
+    <ToggleButton
+        android:id="@+id/btnCorda3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOff="@string/cordaTres"
+        android:textOn="@string/cordaTres"
+        app:layout_constraintEnd_toStartOf="@+id/btnCorda4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCorda2"
+        app:layout_constraintTop_toTopOf="@+id/btnCorda2" />
+
+    <ToggleButton
+        android:id="@+id/btnCorda4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOff="@string/cordaQuatro"
+        android:textOn="@string/cordaQuatro"
+        app:layout_constraintEnd_toStartOf="@+id/btnCorda5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCorda3"
+        app:layout_constraintTop_toTopOf="@+id/btnCorda3" />
+
+    <ToggleButton
+        android:id="@+id/btnCorda5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOff="@string/cordaCinco"
+        android:textOn="@string/cordaCinco"
+        app:layout_constraintEnd_toStartOf="@+id/btnCorda6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCorda4"
+        app:layout_constraintTop_toTopOf="@+id/btnCorda4" />
+
+    <ToggleButton
+        android:id="@+id/btnCorda6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOff="@string/cordaSeis"
+        android:textOn="@string/cordaSeis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCorda5"
+        app:layout_constraintTop_toTopOf="@+id/btnCorda5" />
+
+
+</android.support.constraint.ConstraintLayout>
